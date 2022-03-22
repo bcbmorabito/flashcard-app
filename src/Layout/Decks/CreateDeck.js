@@ -4,9 +4,13 @@ import DeckForm from "./DeckForm";
 import BreadCrumb from "../Common/BreadCrumb";
 import { createDeck } from "../../utils/api/index";
 
+// require('react-dom');
+// window.React2 = require('react');
+// console.log(window.React1 === window.React2);
+
 function NewDeck() {
   const initialFormState = {
-    name: "",
+    name: "", 
     description: "",
   };
 

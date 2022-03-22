@@ -42,7 +42,7 @@ function Layout() {
       <div className="container">
         <Switch>
           <Route exact path="/">
-            <Home decks={decks}/>
+            <Home decks={decks} setDecks={setDecks} />
           </Route>
           <Route path={"/decks/new"}>
             <NewDeck />
