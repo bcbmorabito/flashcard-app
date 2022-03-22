@@ -1,71 +1,84 @@
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import DeckForm from "./DeckForm";
-import BreadCrumb from "../Common/BreadCrumb";
-import { createDeck } from "../../utils/api/index";
+import  React, {useState } from "react";
+import { useHistory } from "react-router";
+import { createDeck } from "../../utils/api";
+import BreadCrumb from "../Common/BreadCrumb"
 
-// require('react-dom');
-// window.React2 = require('react');
-// console.log(window.React1 === window.React2);
-
-function NewDeck() {
-  const initialFormState = {
-    name: "", 
-    description: "",
-  };
-
-  const [formData, setFormData] = useState({...initialFormState});
+function CreateNewDeck() {
+  const [deckName, setDeckName] = useState("");
+  const [deckDescription, setDeckDescription] = useState("");
   const history = useHistory();
 
-  // handle change in form data
-  const handleChange = ({ target }) => {
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
+  const [abortControllers, setAbortControllers] = useState([]);
+  const _abortPreviousCall = () => {
+    if (abortControllers.length) {
+      const lastIndex = abortControllers.length - 1;
+      const lastAbortController = abortControllers[lastIndex];
+      lastAbortController.abort();
+    }
   };
-
-  // handle submission for new deck form data
   const handleSubmit = (event) => {
     event.preventDefault();
-    async function createNewDeck() {
-      try {
-        const deck = await createDeck(formData);
-        history.push(`/decks/${deck.id}`);
-      } catch (error) {
-        if (error !== "AbortError") {
-          throw error;
-        }
-      }
-    }
-    createNewDeck();
+    _abortPreviousCall();
+    const newAbortController = new AbortController();
+    setAbortControllers([...abortControllers, newAbortController]);
+    const deck = {
+      name: deckName,
+      description: deckDescription,
+    };
+    /*Used setTimer just to test the Abort functionality and to see if it will be aborted
+      if the user make another submit attemp */
+    // setTimeout(() => {
+    //   createDeck(deck, newAbortController.signal);
+    // }, 2000);
+    createDeck(deck, newAbortController.signal).then(({id})=>history.push("/decks/"+id));
   };
-
   return (
     <div>
-      <BreadCrumb link={`/decks/new`} pageName={"Create Deck"} />
-      <div>
-        <h1>Create Deck</h1>
-        <br />
-        <DeckForm
-          formData={formData}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-        />
-        <br />
-        <Link to="/">
-          <button className="btn btn-secondary mr-1">Cancel</button>
-        </Link>
-        <button
-          className="btn btn-primary"
-          type="submit"
-          onClick={handleSubmit}
-        >
+      <BreadCrumb navItems={["Create Deck"]} />
+      <h2>Create Deck</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="deckName">Name</label>
+          <input
+            type="text"
+            className="form-control"
+            id="deckName"
+            aria-describedby="newDeck"
+            placeholder="Deck Name"
+            required
+            value={deckName}
+            onChange={({ target: { value } }) => {
+              setDeckName(value);
+            }}
+          />
+          <small id="newDeck" className="form-text text-muted">
+            This field is requuired
+          </small>
+        </div>
+        <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea
+            className="form-control"
+            id="description"
+            placeholder="Brief description of the deck"
+            rows="3"
+            required
+            value={deckDescription}
+            onChange={({ target: { value } }) => {
+              setDeckDescription(value);
+            }}
+          />
+        </div>
+        <button type="reset" className="btn btn-dark mr-2">
+          Cancel
+        </button>
+        <button type="submit" className="btn btn-primary">
           Submit
         </button>
-      </div>
+      </form>
     </div>
   );
 }
+export default CreateNewDeck;
 
-export default NewDeck();

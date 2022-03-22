@@ -15,7 +15,6 @@ import { listDecks } from "../utils/api/index";
 function Layout() {
 
   const [decks, setDecks] = useState([]);
-
   // load decks for home veiw
   useEffect(() => {
     setDecks([]);

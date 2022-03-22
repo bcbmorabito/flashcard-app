@@ -54,7 +54,7 @@ function StudyCard({ cards }) {
         <div className="card w-100">
           <div className="card-body">
             <h4 className="card-title">
-              Card {studySession.cardNumber} of {cards.length}
+              Card {studySession.cardNumber + 1} of {cards.length}
             </h4>
             <p className="card-text font-weight-lighter">
               {studySession.onFront
