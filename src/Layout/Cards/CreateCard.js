@@ -15,7 +15,7 @@ function CreateNewCard() {
     id: 0,
   };
   // initialize state variables for deck and form data
-  const [deck, setDeck] = useState();
+  const [deck, setDeck] = useState({});
   const [formData, setFormData] = useState({ ...initialFormState });
   // handle change function for form
   const handleChange = ({ target }) => {
@@ -44,7 +44,7 @@ function CreateNewCard() {
   useEffect(() => {
     async function loadDeck() {
       const targetDeck = await readDeck(deckId);
-      setDeck(() => targetDeck);
+      setDeck(targetDeck);
     }
     loadDeck();
   }, [deckId]);
@@ -53,7 +53,7 @@ function CreateNewCard() {
   return (
     <div>
       <BreadCrumb
-        link={`/decks/${deck.id}`}
+        link={`/decks/${deckId}`}
         linkName={deck.name}
         pageName={"Add Card"}
       />
@@ -61,7 +61,7 @@ function CreateNewCard() {
         <h2>{deck.name}: Add Card</h2>
         <br />
       </div>
-      <div className="row">
+      <div className="row"> 
         <CardForm
           formData={formData}
           handleChange={handleChange}

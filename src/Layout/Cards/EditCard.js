@@ -8,8 +8,8 @@ function EditCard() {
   // define deckId and cardId from parameters, initialize history for navigation after submit, initialize state variables for deck and card
   const { deckId, cardId } = useParams();
   const history = useHistory();
-  const [deck, setDeck] = useState();
-  const [card, setCard] = useState();
+  const [deck, setDeck] = useState({});
+  const [card, setCard] = useState({});
   // load deck and card when deckId or cardId change
   useEffect(() => {
     const loadDeck = async () => setDeck(await readDeck(deckId));
@@ -28,9 +28,10 @@ function EditCard() {
   const handleSubmit = (event) => {
     event.preventDefault();
     async function editCardData() {
+      const abortController = new AbortController();
       try {
-        await updateCard(card);
-        history.push(`/decks/${deckId}`);
+        const targetCard = await updateCard(card, abortController.signal);
+        history.push(`/decks/${targetCard.deckId}`);
       } catch (error) {
         if (error.name !== "AbortError") {
           throw error;

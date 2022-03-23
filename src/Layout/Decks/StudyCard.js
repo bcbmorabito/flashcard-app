@@ -34,7 +34,7 @@ function StudyCard({ cards }) {
 
   // handle card flip from front to back based on onFront key
   const handleFlip = () => {
-    if (studySession.onFront) {
+    if (!studySession.onFront) {
       setStudySession({
         ...studySession,
         onFront: true,

@@ -26,7 +26,7 @@ function CardForm({ formData, handleChange, handleSubmit }) {
           name="back"
           id="back"
           className="form-control"
-          value={formData.front}
+          value={formData.back}
           onChange={handleChange}
           placeholder="Card Back"
           style={{ width: "100%" }}

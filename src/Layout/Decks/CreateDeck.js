@@ -3,7 +3,7 @@ import { useHistory } from "react-router";
 import { createDeck } from "../../utils/api";
 import BreadCrumb from "../Common/BreadCrumb"
 
-function CreateNewDeck() {
+function NewDeck() {
   const [deckName, setDeckName] = useState("");
   const [deckDescription, setDeckDescription] = useState("");
   const history = useHistory();
@@ -25,16 +25,21 @@ function CreateNewDeck() {
       name: deckName,
       description: deckDescription,
     };
+
+    async function submitDeck () {
+      const targetDeck = await createDeck(deck, newAbortController.signal);
+      history.push(`/decks/${targetDeck.id}`)
+    }
     /*Used setTimer just to test the Abort functionality and to see if it will be aborted
       if the user make another submit attemp */
     // setTimeout(() => {
     //   createDeck(deck, newAbortController.signal);
     // }, 2000);
-    createDeck(deck, newAbortController.signal).then(({id})=>history.push("/decks/"+id));
+    submitDeck();
   };
   return (
     <div>
-      <BreadCrumb navItems={["Create Deck"]} />
+      <BreadCrumb pageName="Create Deck" />
       <h2>Create Deck</h2>
 
       <form onSubmit={handleSubmit}>
@@ -80,5 +85,5 @@ function CreateNewDeck() {
     </div>
   );
 }
-export default CreateNewDeck;
+export default NewDeck;
 
