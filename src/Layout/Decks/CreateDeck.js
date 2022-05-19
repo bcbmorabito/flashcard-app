@@ -30,11 +30,7 @@ function NewDeck() {
       const targetDeck = await createDeck(deck, newAbortController.signal);
       history.push(`/decks/${targetDeck.id}`)
     }
-    /*Used setTimer just to test the Abort functionality and to see if it will be aborted
-      if the user make another submit attemp */
-    // setTimeout(() => {
-    //   createDeck(deck, newAbortController.signal);
-    // }, 2000);
+    
     submitDeck();
   };
   return (
@@ -86,4 +82,3 @@ function NewDeck() {
   );
 }
 export default NewDeck;
-
